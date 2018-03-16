@@ -1,0 +1,24 @@
+{
+  "name": "react-CNode",
+  "version": "1.0.0",
+  "description": "CNode WebApp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laclys/react-CNode.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/laclys/react-CNode/issues"
+  },
+  "homepage": "https://github.com/laclys/react-CNode#readme",
+  "dependencies": {
+    "react": "^16.2.0",
+    "webpack": "^4.1.1"
+  }
+}
