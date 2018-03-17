@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const path = require('path') // 引入‘path’，为了在这里使用绝对路径，避免相对路径在不同系统时出现不必要的问题
 const HTMLPlugin = require('html-webpack-plugin')
 
@@ -39,11 +40,19 @@ const config ={
 }
 
 if (isDev) {
+  // entry可以是一个数组，将入口文件们打包成一个
+  config.entry = {
+    app: [
+      'react-hot-loader/patch',
+      path.join(__dirname, '../src/app.js')
+    ]
+  }
+
   config.devServer = {
     host: '0.0.0.0',  // 我们可以允许我们用任意方式进行访问（ip，localhost）
     port: '8888',
     contentBase: path.join(__dirname, '../dist'),
-    // hot: true,  //启动热加载
+    hot: true,  //启动 Hot module replacement
     overlay: {  // 错误提醒弹窗
       errors: true //只显示error
     },
@@ -53,6 +62,7 @@ if (isDev) {
       index: '/public/index.html' // 所有404的请求全部访问该配置下的url
     }
   }
+  config.plugins.push(new webpack.HotModuleReplacementPlugin())
 }
 
 module.exports = config
