@@ -14,7 +14,7 @@ app.use('/public', express.static(path.join(__dirname, '../dist'))) //静态文�
 
 app.get('*', (req, res) => {
   const appStr = ReactSSR.renderToString(serverEntry)
-  res.send(template.replace('<app></app>', appStr))
+  res.send(template.replace('<!--app-->', appStr))
 })
 
 app.listen(2333, () => {
