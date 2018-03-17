@@ -13,7 +13,7 @@ const config ={
   output: {
     filename: '[name].[hash].js',  //name代表entry对应的名字; hash代表 整个app打包完成后根据内容加上hash。一旦整个文件内容变更，hash就会变化
     path: path.join(__dirname, '../dist'), // 打包好之后的输出路径
-    publicPath: 'public' // 静态资源文件引用时的路径（加在引用静态资源前面的） （更好的区分什么时候返回静态路径，什么时候返回服务端代码）
+    publicPath: '/public/' // 静态资源文件引用时的路径（加在引用静态资源前面的） （更好的区分什么时候返回静态路径，什么时候返回服务端代码）
   },
   // 配置loader
   module: {
@@ -57,7 +57,7 @@ if (isDev) {
       errors: true //只显示error
     },
     // 和output配置对应起来
-    publicPath: '/public',  // 访问所有静态路径都要前面加/public才能访问生成的静态文件
+    publicPath: '/public/',  // 访问所有静态路径都要前面加/public才能访问生成的静态文件
     historyApiFallback: {
       index: '/public/index.html' // 所有404的请求全部访问该配置下的url
     }
