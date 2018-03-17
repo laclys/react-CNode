@@ -10,7 +10,7 @@ module.exports ={
   output: {
     filename: 'server-entry.js',  // node端没有浏览器缓存这个概念，并且需要在node中直接import这个文件。故直接命名就好
     path: path.join(__dirname, '../dist'), // 打包好之后的输出路径
-    publicPath: '',
+    publicPath: 'public',
     libraryTarget: 'commonjs2' // 打包出来js模块所使用的方案（umd、amd、cmd、commonJS）这里我们使用commonjs2，适用于node端
   },
   // 配置loader

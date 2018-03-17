@@ -10,7 +10,7 @@ module.exports ={
   output: {
     filename: '[name].[hash].js',  //name代表entry对应的名字; hash代表 整个app打包完成后根据内容加上hash。一旦整个文件内容变更，hash就会变化
     path: path.join(__dirname, '../dist'), // 打包好之后的输出路径
-    publicPath: '' // 静态资源文件引用时的路径（加在引用静态资源前面的）
+    publicPath: 'public' // 静态资源文件引用时的路径（加在引用静态资源前面的） （更好的区分什么时候返回静态路径，什么时候返回服务端代码）
   },
   // 配置loader
   module: {
@@ -29,6 +29,9 @@ module.exports ={
     ]
   },
   plugins: [
-    new HTMLPlugin()   // 生成一个html页面，同时在webpack编译的时候。把我们所生成的entry都注入到这个html页面中,路径都是根据我们output配置的来走的。
+    // 生成一个html页面，同时在webpack编译的时候。把我们所生成的entry都注入到这个html页面中,路径都是根据我们output配置的来走的。
+    new HTMLPlugin({
+      template: path.join(__dirname, '../src/template.html')
+    })   
   ]
 }
