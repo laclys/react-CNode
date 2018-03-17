@@ -7,7 +7,8 @@
     "build:web": "webpack --mode development --config build/webpack.config.js",
     "build:server": "webpack --mode development --config build/webpack.config.server.js",
     "clear": "rimraf dist",
-    "build": "npm run clear && npm run build:web && npm run build:server"
+    "build": "npm run clear && npm run build:web && npm run build:server",
+    "start": "node server/server.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/laclys/react-CNode#readme",
   "dependencies": {
+    "express": "^4.16.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "webpack": "^4.1.1",
