@@ -1,7 +1,9 @@
 const path = require('path') // 引入‘path’，为了在这里使用绝对路径，避免相对路径在不同系统时出现不必要的问题
 const HTMLPlugin = require('html-webpack-plugin')
 
-module.exports ={
+const isDev = process.env.NODE_ENV === 'development' // 判断是否为开发环境
+
+const config ={
   // 应用入口
   entry: {
     app: path.join(__dirname, '../src/app.js')  // app.js作为打包的入口
@@ -35,3 +37,22 @@ module.exports ={
     })   
   ]
 }
+
+if (isDev) {
+  config.devServer = {
+    host: '0.0.0.0',  // 我们可以允许我们用任意方式进行访问（ip，localhost）
+    port: '8888',
+    contentBase: path.join(__dirname, '../dist'),
+    // hot: true,  //启动热加载
+    overlay: {  // 错误提醒弹窗
+      errors: true //只显示error
+    },
+    // 和output配置对应起来
+    publicPath: '/public',  // 访问所有静态路径都要前面加/public才能访问生成的静态文件
+    historyApiFallback: {
+      index: '/public/index.html' // 所有404的请求全部访问该配置下的url
+    }
+  }
+}
+
+module.exports = config
