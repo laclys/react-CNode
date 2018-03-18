@@ -16,8 +16,9 @@ if (!isDev) {
     const appStr = ReactSSR.renderToString(serverEntry)
     res.send(template.replace('<!--app-->', appStr))
   })
-} esle {
-  
+} else {
+  const devStatic = require('./util/dev-static')
+  devStatic(app)
 }
 
 app.listen(2333, () => {
