@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader' // eslint-disable-line
-import App from './views/App.jsx'
+import App from './views/App.jsx' // eslint-disable-line
 
 
 const root = document.getElementById('root')
