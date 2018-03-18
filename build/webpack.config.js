@@ -19,6 +19,14 @@ const config ={
   module: {
     rules: [
       {
+        enforce: 'pre',   // 编译之前去执行
+        test: /.(js|jsx)$/,
+        loader: 'eslint-loader',
+        exclude: [
+          path.resolve(__dirname, '../node_modules')
+        ]
+      },
+      {
         test: /.(jsx)$/, //使用loader的目标文件。这里是.jsx
         loader: 'babel-loader'
       },
