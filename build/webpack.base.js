@@ -5,6 +5,9 @@ module.exports = {
     path: path.join(__dirname, '../dist'), // 打包好之后的输出路径
     publicPath: '/public/', // 静态资源文件引用时的路径（加在引用静态资源前面的） （更好的区分什么时候返回静态路径，什么时候返回服务端代码）
   },
+  resolve: {
+    extensions: ['.js', '.jsx']  // 省略.js及.jsx后缀名
+  },
   // 配置loader
   module: {
     rules: [
