@@ -18,8 +18,6 @@ module.exports = function (req, res, next) {
   const query = Object.assign({}, req.query)
   if (query.needAccessToken) delete query.needAccessToken
 
-  // console.log(`${baseUrl}${path}`)
-  // console.log(query)
   axios(`${baseUrl}${path}`, {
     method: req.method,
     params: query,
