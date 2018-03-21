@@ -21,11 +21,11 @@ module.exports = function (req, res, next) {
   axios(`${baseUrl}${path}`, {
     method: req.method,
     params: query,
-    data: Object.assign({}, req.body, {
+    data: querystring.stringify(Object.assign({}, req.body, {
       accesstoken: user.accessToken
-    }),
+    })),
     headers: {
-      'Content-Type': 'application/x-www-form-urlencode'
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   }).then(resp => {
     if (resp.status === 200) {
