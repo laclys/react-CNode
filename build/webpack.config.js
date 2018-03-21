@@ -44,6 +44,9 @@ if (isDev) {
     publicPath: '/public/',  // 访问所有静态路径都要前面加/public才能访问生成的静态文件
     historyApiFallback: {
       index: '/public/index.html' // 所有404的请求全部访问该配置下的url
+    },
+    proxy: {
+      '/api': 'http://localhost:2333'
     }
   }
   config.plugins.push(new webpack.HotModuleReplacementPlugin())
