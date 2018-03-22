@@ -9,6 +9,7 @@ module.exports = webpackMerge(baseConfig,{
   entry: {
     app: path.join(__dirname, '../src/server-entry.js')  // app.js作为打包的入口
   },
+  externals: Object.keys(require('../package.json').dependencies), // 指定一些包，不把他输出到bunlde包里面
   // 输出目录
   output: {
     filename: 'server-entry.js',  // node端没有浏览器缓存这个概念，并且需要在node中直接import这个文件。故直接命名就好

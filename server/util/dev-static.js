@@ -19,7 +19,23 @@ const getTemplate = () => {
   })
 }
 
-const Module = module.constructor
+// const Module = module.constructor
+const NativeModule = require('module')
+const vm = require('vm')
+
+const getModuleFromString = (bundle, filename) => {
+  const m ={exports: {} }
+  const wrapper = NativeModule.wrap(bundle) // 将可执行的JS代码进行包装 => (function(exports, require, module,  __filename, __dirname){bundle code})
+  const script = new vm.Script(wrapper, { // 让包裹起来的代码跑起来
+    filename: filename,
+    displayErrors: true,
+  })
+  const result = script.runInThisContext() // 指定执行环境 （使用当前的context）
+  result.call(m.exports, m.exports, require, m) // 让执行完的代码 全部附在m对象上
+  return m
+}
+
+
 const mfs = new MemoryFs()
 const serverCompiler = webpack(serverConfig)  // webpack在node中调用
 serverCompiler.outputFileSystem = mfs // 通过memory-fs进行读写，加快他的打包速度 (内存读写比硬盘读写快很多)
@@ -39,8 +55,9 @@ serverCompiler.watch({}, (err, stats) => {
   )
   const bundle = mfs.readFileSync(bundlePath, 'utf-8')  // 编译出来是一串字符串
   // hack：通过new一个Moudle，通过——compile转化字符串，成为nodeJs可以使用的moudle
-  const m = new Module()
-  m._compile(bundle, 'server-entry.js') //动态编译需要指定一个文件名。不然他无法在缓存中存储这部分内容
+  // const m = new Module()
+  // m._compile(bundle, 'server-entry.js') //动态编译需要指定一个文件名。不然他无法在缓存中存储这部分内容
+  const m = getModuleFromString(bundle, 'server-entry.js')
   serverBundle = m.exports.default
   createStoreMap = m.exports.createStoreMap
 })
