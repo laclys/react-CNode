@@ -19,6 +19,10 @@ const config = webpackMerge(baseConfig, {
     // 生成一个html页面，同时在webpack编译的时候。把我们所生成的entry都注入到这个html页面中,路径都是根据我们output配置的来走的。
     new HTMLPlugin({
       template: path.join(__dirname, '../src/template.html')
+    }),
+    new HTMLPlugin({
+      template: '!!ejs-compiled-loader!' + path.join(__dirname, '../src/server.template.ejs'),
+      filename: 'server.ejs'
     })
   ]
 })
