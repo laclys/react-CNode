@@ -8,6 +8,7 @@ const ejs = require('ejs')
 const serialize = require('serialize-javascript')
 const asyncBootstrapper = require('react-async-bootstrapper')
 const serverConfig = require('../../build/webpack.config.server')
+const Helmet = require('react-helmet').default
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
@@ -88,11 +89,16 @@ module.exports = function (app) {
           res.end()
           return
         }
+        const helmet = Helmet.rewind()
         const state = getStoreState(stores)
         const content = ReactDomServer.renderToString(app)
         const html = ejs.render(template, {
           appString: content,
           initialState: serialize(state),
+          meta: helmet.meta.toString(),
+          title: helmet.title.toString(),
+          style: helmet.style.toString(),
+          link: helmet.link.toString()
         })
         res.send(html)
         // res.send(template.replace('<!--app-->', content))
