@@ -45,16 +45,16 @@ class MainAppBar extends React.Component {
       <div className={classes.root} >
         <AppBar position="fixed">
           <ToolBar>
-            <IconButton color="Contrast" onClick={this.onHomeIconClick}>
+            <IconButton color="default" onClick={this.onHomeIconClick}>
               <HomeIcon />
             </IconButton>
             <Typography type="title" color="inherit" className={classes.flex} >
               CNode
             </Typography>
-            <Button raised="true" color="accent" onClick={this.createButtonClick} >
+            <Button raised="true" color="default" onClick={this.createButtonClick} >
               New Topic
             </Button>
-            <Button color="contrast" onClick={this.loginButtonClick} >
+            <Button color="default" onClick={this.loginButtonClick} >
               Login
             </Button>
           </ToolBar>
