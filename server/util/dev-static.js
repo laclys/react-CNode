@@ -1,14 +1,11 @@
 const axios = require('axios')
 const webpack = require('webpack')
 const path = require('path')
-const MemoryFs = require('memory-fs')  // 从内存中读取信息 和fs API一模一样
-const ReactDomServer = require('react-dom/server')
+const MemoryFs = require('memory-fs') // 从内存中读取信息 和fs API一模一样
 const proxy = require('http-proxy-middleware')
-const ejs = require('ejs')
-const serialize = require('serialize-javascript')
-const asyncBootstrapper = require('react-async-bootstrapper')
 const serverConfig = require('../../build/webpack.config.server')
-const Helmet = require('react-helmet').default
+
+const serverRender = require('./server-render')
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
@@ -25,7 +22,9 @@ const NativeModule = require('module')
 const vm = require('vm')
 
 const getModuleFromString = (bundle, filename) => {
-  const m ={exports: {} }
+  const m = {
+    exports: {}
+  }
   const wrapper = NativeModule.wrap(bundle) // 将可执行的JS代码进行包装 => (function(exports, require, module,  __filename, __dirname){bundle code})
   const script = new vm.Script(wrapper, { // 让包裹起来的代码跑起来
     filename: filename,
@@ -38,15 +37,15 @@ const getModuleFromString = (bundle, filename) => {
 
 
 const mfs = new MemoryFs()
-const serverCompiler = webpack(serverConfig)  // webpack在node中调用
+const serverCompiler = webpack(serverConfig) // webpack在node中调用
 serverCompiler.outputFileSystem = mfs // 通过memory-fs进行读写，加快他的打包速度 (内存读写比硬盘读写快很多)
 
-let serverBundle, createStoreMap
+let serverBundle
 
 // 目的是拿到打包下来的内容 (监听服务端)
 serverCompiler.watch({}, (err, stats) => {
   if (err) throw err
-  stats= stats.toJson()
+  stats = stats.toJson()
   stats.errors.forEach(err => console.error(err))
   stats.warnings.forEach(warn => console.warn(warn))
 
@@ -54,55 +53,22 @@ serverCompiler.watch({}, (err, stats) => {
     serverConfig.output.path,
     serverConfig.output.filename
   )
-  const bundle = mfs.readFileSync(bundlePath, 'utf-8')  // 编译出来是一串字符串
+  const bundle = mfs.readFileSync(bundlePath, 'utf-8') // 编译出来是一串字符串
   // hack：通过new一个Moudle，通过——compile转化字符串，成为nodeJs可以使用的moudle
   // const m = new Module()
   // m._compile(bundle, 'server-entry.js') //动态编译需要指定一个文件名。不然他无法在缓存中存储这部分内容
   const m = getModuleFromString(bundle, 'server-entry.js')
-  serverBundle = m.exports.default
-  createStoreMap = m.exports.createStoreMap
+  serverBundle = m.exports
 })
-
-const getStoreState = (stores) => {
-  return Object.keys(stores).reduce((result, storeName) => {
-    result[storeName] = stores[storeName].toJson()
-    return result
-  }, {})
-}
-
 module.exports = function (app) {
   // 只要是/public开头的所有请求，都把它代理到webpack dev server那边
   app.use('/public', proxy({
     target: 'http://localhost:8888'
   }))
 
-  app.get('*', function(req, res) {
+  app.get('*', function (req, res, next) {
     getTemplate().then(template => {
-      const routerContext = {}
-      const stores = createStoreMap()
-      const app = serverBundle(stores, routerContext, req.url)
-
-      asyncBootstrapper(app).then(() => {
-        // 服务端渲染 路由跳转
-        if (routerContext.url) {
-          res.status(302).setHeader('Location', routerContext.url)
-          res.end()
-          return
-        }
-        const helmet = Helmet.rewind()
-        const state = getStoreState(stores)
-        const content = ReactDomServer.renderToString(app)
-        const html = ejs.render(template, {
-          appString: content,
-          initialState: serialize(state),
-          meta: helmet.meta.toString(),
-          title: helmet.title.toString(),
-          style: helmet.style.toString(),
-          link: helmet.link.toString()
-        })
-        res.send(html)
-        // res.send(template.replace('<!--app-->', content))
-      })
-    })
+      return serverRender(serverBundle, template, req, res)
+    }).catch(next)
   })
 }
