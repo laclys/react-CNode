@@ -12,7 +12,8 @@
     "build": "npm run clear && npm run build:web && npm run build:server",
     "start": "node server/server.js",
     "lint": "eslint --ext .js --ext .jsx src/",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "start": "cross-env NODE_ENV=production node server/server.js"
   },
   "repository": {
     "type": "git",
