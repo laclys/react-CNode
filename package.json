@@ -10,10 +10,9 @@
     "dev:server": "cross-env NODE_ENV=development node server/server.js",
     "clear": "rimraf dist",
     "build": "npm run clear && npm run build:web && npm run build:server",
-    "start": "node server/server.js",
+    "start": "cross-env NODE_ENV=production node server/server.js",
     "lint": "eslint --ext .js --ext .jsx src/",
-    "precommit": "npm run lint",
-    "start": "cross-env NODE_ENV=production node server/server.js"
+    "precommit": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -33,6 +32,10 @@
     "ejs-compiled-loader": "^1.1.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "jss": "^9.8.1",
+    "jss-preset-default": "^4.3.0",
+    "material-ui": "^1.0.0-beta.38",
+    "material-ui-icons": "^1.0.0-beta.36",
     "mobx": "^4.1.0",
     "mobx-react": "^5.0.0",
     "prop-types": "^15.6.1",
@@ -41,6 +44,7 @@
     "react-async-bootstrapper": "^2.1.0",
     "react-dom": "^16.2.0",
     "react-helmet": "^5.2.0",
+    "react-jss": "^8.3.5",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "serialize-javascript": "^1.4.0",

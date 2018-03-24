@@ -3,20 +3,50 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'mobx-react'
 import { AppContainer } from 'react-hot-loader' // eslint-disable-line
-import App from './views/App'
 
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
+import { deepOrange, lightBlue } from 'material-ui/colors'
+
+import App from './views/App'
 import AppState from './store/app-state'
+
+
+const theme = createMuiTheme({
+  palette: {
+    primary: deepOrange,
+    accent: lightBlue,
+    type: 'light',
+  },
+})
 
 const initialState = window.__INITIAL__STATE__ || {} // eslint-disable-line
 
-const root = document.getElementById('root')
+const createApp = (TheAPP) => {
+  class Main extends React.Component {
+    // Remove the server-side injected CSS.
+    componentDidMount() {
+      const jssStyles = document.getElementById('jss-server-side');
+      if (jssStyles && jssStyles.parentNode) {
+        jssStyles.parentNode.removeChild(jssStyles);
+      }
+    }
 
+    render() {
+      return <TheAPP />
+    }
+  }
+  return Main
+}
+
+const root = document.getElementById('root')
 const render = (Component) => {
   ReactDOM.hydrate(
     <AppContainer>
       <Provider appState={new AppState(initialState.appState)} >
         <BrowserRouter>
-          <Component />
+          <MuiThemeProvider theme={theme} sheetsManager={new Map()} >
+            <Component />
+          </MuiThemeProvider>
         </BrowserRouter>
       </Provider>
     </AppContainer>,
@@ -24,11 +54,11 @@ const render = (Component) => {
   )
 }
 
-render(App)
+render(createApp(App))
 
 if (module.hot) { // 当热更新的代码出现之后
   module.hot.accept('./views/App', () => {
     const NextApp = require('./views/App').default // eslint-disable-line
-    render(NextApp)
+    render(createApp(NextApp))
   })
 }
