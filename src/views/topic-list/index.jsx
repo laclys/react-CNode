@@ -2,16 +2,21 @@ import React from 'react'
 import { observer, inject } from 'mobx-react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
-import Button from 'material-ui/Button'
+import Tabs, { Tab } from 'material-ui/Tabs'
 
 import { AppState } from '../../store/app-state'
 import Container from '../layout/container'
+import TopicListItem from './list-item'
 
 @inject('appState') @observer
 export default class TopicList extends React.Component {
   constructor() {
     super()
-    this.changeName = this.changeName.bind(this)
+    this.state = {
+      tabIndex: 0,
+    }
+    this.changeTab = this.changeTab.bind(this)
+    this.listItemClick = this.listItemClick.bind(this)
   }
 
   componentDidMount() {
@@ -27,20 +32,41 @@ export default class TopicList extends React.Component {
     })
   }
 
-  changeName(event) {
-    this.props.appState.changeName(event.target.value)
+  changeTab(e, index) {
+    this.setState({
+      tabIndex: index,
+    })
   }
+  /* eslint-disable */
+  listItemClick() {
 
+  }
+  /* eslint-enable */
   render() {
+    const { tabIndex } = this.state
+    const topic = {
+      title: 'this is title',
+      username: 'Lacly',
+      reply_count: 20,
+      visit_count: 30,
+      create_at: 'abs',
+      tab: 'share',
+    }
     return (
       <Container>
         <Helmet>
           <title>This is topic list</title>
           <meta name="description" content="lalalalallala" />
         </Helmet>
-        <Button raised="true" color="primary" >this is a button</Button>
-        <input type="text" onChange={this.changeName} />
-        <span>{this.props.appState.msg}</span>
+        <Tabs value={tabIndex} onChange={this.changeTab} >
+          <Tab label="All" />
+          <Tab label="Share" />
+          <Tab label="Jobs" />
+          <Tab label="QI" />
+          <Tab label="Selected" />
+          <Tab label="Test" />
+        </Tabs>
+        <TopicListItem onClick={this.listItemClick} topic={topic} />
       </Container>
     )
   }
