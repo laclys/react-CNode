@@ -17,5 +17,6 @@
     "react/require-default-props": [0],
     "arrow-body-style": [0],
     "react/forbid-prop-types": [0],
+    "no-param-reassign": [0]
   }
 }
