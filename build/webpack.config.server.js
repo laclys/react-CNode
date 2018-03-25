@@ -1,5 +1,5 @@
 const path = require('path') // 引入‘path’，为了在这里使用绝对路径，避免相对路径在不同系统时出现不必要的问题
-
+const webpack = require('webpack')
 const webpackMerge = require('webpack-merge') //官方出品 专门用来合并webpack配置的 会检测webpack属性并选择最优的合并方案的
 const baseConfig = require('./webpack.base')
 
@@ -14,5 +14,10 @@ module.exports = webpackMerge(baseConfig,{
   output: {
     filename: 'server-entry.js',  // node端没有浏览器缓存这个概念，并且需要在node中直接import这个文件。故直接命名就好
     libraryTarget: 'commonjs2' // 打包出来js模块所使用的方案（umd、amd、cmd、commonJS）这里我们使用commonjs2，适用于node端
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.API_BASE': '"http://127.0.0.1:3000'
+    })
+  ]
 })
