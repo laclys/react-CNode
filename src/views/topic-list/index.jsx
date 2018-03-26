@@ -5,8 +5,10 @@ import Helmet from 'react-helmet'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import List from 'material-ui/List'
 import { CircularProgress } from 'material-ui/Progress'
+import queryString from 'query-string'
 import Container from '../layout/container'
 import TopicListItem from './list-item'
+import { tabs } from '../../util/variable-define'
 
 @inject((stores) => {
   return {
@@ -15,17 +17,19 @@ import TopicListItem from './list-item'
   }
 }) @observer
 export default class TopicList extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object,
+  }
+
   constructor() {
     super()
-    this.state = {
-      tabIndex: 0,
-    }
     this.changeTab = this.changeTab.bind(this)
     this.listItemClick = this.listItemClick.bind(this)
   }
 
   componentDidMount() {
-    this.props.topicStore.fetchTopic()
+    const tab = this.getTab()
+    this.props.topicStore.fetchTopic(tab)
   }
 
   bootstrap() {
@@ -37,9 +41,15 @@ export default class TopicList extends React.Component {
     })
   }
 
-  changeTab(e, index) {
-    this.setState({
-      tabIndex: index,
+  getTab() {
+    const query = queryString.parse(this.props.location.search)
+    return query.tab || 'all'
+  }
+
+  changeTab(e, value) {
+    this.context.router.history.push({
+      pathname: '/list',
+      search: `?tab=${value}`,
     })
   }
   /* eslint-disable */
@@ -48,34 +58,23 @@ export default class TopicList extends React.Component {
   }
   /* eslint-enable */
   render() {
-    const { tabIndex } = this.state
-
     const { topicStore } = this.props
 
     const topicList = topicStore.topics
     const syncingTopics = topicStore.syncing
-    // const topic = {
-    //   title: 'this is title',
-    //   username: 'Lacly',
-    //   reply_count: 20,
-    //   visit_count: 30,
-    //   create_at: 'abs',
-    //   tab: 'share',
-    // }
-
+    const tab = this.getTab()
     return (
       <Container>
         <Helmet>
           <title>This is topic list</title>
           <meta name="description" content="lalalalallala" />
         </Helmet>
-        <Tabs value={tabIndex} onChange={this.changeTab} >
-          <Tab label="All" />
-          <Tab label="Share" />
-          <Tab label="Jobs" />
-          <Tab label="QI" />
-          <Tab label="Selected" />
-          <Tab label="Test" />
+        <Tabs value={tab} onChange={this.changeTab} >
+          {
+            Object.keys(tabs).map(t => (
+              <Tab key={t} label={tabs[t]} value={t} />
+            ))
+          }
         </Tabs>
         <List>
           {
@@ -107,3 +106,6 @@ TopicList.wrappedComponent.propTypes = {
   topicStore: PropTypes.object.isRequired,
 }
 
+TopicList.propTypes = {
+  location: PropTypes.object.isRequired,
+}

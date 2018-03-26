@@ -7,11 +7,12 @@ import Avatar from 'material-ui/Avatar'
 import { withStyles } from 'material-ui/styles'
 
 import { topicPrimaryStyle, topicSecondaryStyles } from './styles'
+import { tabs } from '../../util/variable-define'
 
 const Primary = ({ classes, topic }) => {
   return (
     <div className={classes.root} >
-      <span className={classes.tab} >{topic.tab}</span>
+      <span className={classes.tab} >{topic.top ? 'Top' : tabs[topic.tab]}</span>
       <span className={classes.title} >{topic.title}</span>
     </div>
   )

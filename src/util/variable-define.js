@@ -1,10 +1,10 @@
 export const tabs = {
+  all: 'All',
   share: 'Share',
   job: 'Job',
   ask: 'IQ',
   good: 'Selected',
   dev: 'Test',
-  all: 'All',
 }
 
 export const topicSchema = {
