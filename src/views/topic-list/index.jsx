@@ -32,6 +32,11 @@ export default class TopicList extends React.Component {
     this.props.topicStore.fetchTopic(tab)
   }
 
+  getTab() {
+    const query = queryString.parse(this.props.location.search)
+    return query.tab || 'all'
+  }
+
   bootstrap() {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -39,11 +44,6 @@ export default class TopicList extends React.Component {
         resolve(true)
       })
     })
-  }
-
-  getTab() {
-    const query = queryString.parse(this.props.location.search)
-    return query.tab || 'all'
   }
 
   changeTab(e, value) {

@@ -5,14 +5,19 @@ import ListItemAvatar from 'material-ui/List/ListItemAvatar'
 import ListItemText from 'material-ui/List/ListItemText'
 import Avatar from 'material-ui/Avatar'
 import { withStyles } from 'material-ui/styles'
+import cx from 'classnames'
 
 import { topicPrimaryStyle, topicSecondaryStyles } from './styles'
 import { tabs } from '../../util/variable-define'
 
 const Primary = ({ classes, topic }) => {
+  const classNames = cx({
+    [classes.tab]: true,
+    [classes.top]: topic.top,
+  })
   return (
     <div className={classes.root} >
-      <span className={classes.tab} >{topic.top ? 'Top' : tabs[topic.tab]}</span>
+      <span className={classNames} >{topic.top ? 'Top' : tabs[topic.tab]}</span>
       <span className={classes.title} >{topic.title}</span>
     </div>
   )
